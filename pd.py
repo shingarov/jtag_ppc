@@ -71,6 +71,73 @@ class PPCMODE(JTAGInstruction):
         print("PPCMODE IN: 0x%x OUT: 0x%x" % (self.i, self.o))
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [1, ["PPCMODE: 0x%x / 0x%x" % (self.i, self.o)]])
 
+# from A2 Processor User's Manual, Table 14-1
+SPRs = {
+    # sheet 1
+    31   :  'ACOP',
+    913  :  'AESR',
+    1008 :  'CCR0',
+    1009 :  'CCR1',
+    1010 :  'CCR2',
+    1013 :  'CCR3',
+    912  :  'CESR',
+    58   :  'CSRR0',
+    59   :  'CSRR1',
+    9    :  'CTR',
+    316  :  'DAC1',
+    317  :  'DAC2',
+    849  :  'DAC3',
+    850  :  'DAC4',
+    308  :  'DBCR0',
+    309  :  'DBCR1',
+    310  :  'DBCR2',
+    848  :  'DBCR3',
+    304  :  'DBSR',
+    306  :  'DBSRWR',
+    61   :  'DEAR',
+    22   :  'DEC',
+    54   :  'DECAR',
+    318  :  'DVC1',
+    319  :  'DVC2',
+    # sheet 2
+    307  :  'EPCR',
+    947  :  'EPLC',
+    948  :  'EPSC',
+    350  :  'EPTCFG',
+    62   :  'ESR',
+    381  :  'GDEAR',
+    383  :  'GESR',
+    447  :  'GIVPR',
+    382  :  'GPIR',
+    368  :  'GSPRG0',
+    369  :  'GSPRG1',
+    370  :  'GSPRG2',
+    371  :  'GSPRG3',
+    378  :  'GSRR0',
+    379  :  'GSRR1',
+    351  :  'HACOP',
+    312  :  'IAC1',
+    313  :  'IAC2',
+    314  :  'IAC3',
+    315  :  'IAC4',
+    882  :  'IAR',
+    914  :  'IESR1',
+    915  :  'IESR2',
+    880  :  'IMMR',
+    #we omit IMPDEP regions for now
+    880  :  'IMR',
+    1011 :  'IUCR0',
+    883  :  'IUCR1',
+    # sheet 3
+    884  :  'IUCR2',
+    888  :  'IUDBG0',
+    889  :  'IUDBG1',
+    890  :  'IUDBG2'
+    #...
+
+}
+
+
 class PPCINST(JTAGInstruction):
     def __init__(self, decoder):
         self.decoder = decoder
@@ -87,6 +154,9 @@ class PPCINST(JTAGInstruction):
         dis = md.disasm(bytes(bytes_data), 0x1000)
         instr = dis.__next__()
         disassembled = "%s %s" % (instr.mnemonic, instr.op_str)
+        if instr.mnemonic=='mtspr':
+            if instr.op_find(1,0).reg in SPRs:
+                disassembled = disassembled + '  (' + SPRs[instr.op_find(1,0).reg] + ')'
         print('PPCINST: %s' % disassembled)
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [0, [disassembled]])
 
