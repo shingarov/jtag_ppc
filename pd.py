@@ -161,18 +161,7 @@ class PPCINST(JTAGInstruction):
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [0, [disassembled]])
 
     def tdo(self, data):
-        if data == "000000000000000000000000000000001":
-            return
-        if data == "00000000000000000000000000000001":
-            return
-        if data == "00000000000000000000000000000000":
-            return
-        if data == '00000000000100000000000000000000': #weird shit???
-            return
-        if data == '00000000000100000000000010000000': #weird shit???
-            return
-        import ipdb; ipdb.set_trace()
-        raise Exception("Unexpected DR TDO value")
+        return
 
 
 class PPCDBGR(JTAGInstruction):
