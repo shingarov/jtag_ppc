@@ -143,6 +143,7 @@ class PPCINST(JTAGInstruction):
         self.decoder = decoder
 
     def tdi(self, data):
+        self.i = int(data, 2)
         if data=='00000000000000000000000000000000':
             return
         if len(data) != JTAGD_LENGTH:
@@ -161,6 +162,9 @@ class PPCINST(JTAGInstruction):
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [0, [disassembled]])
 
     def tdo(self, data):
+        if self.i == 0:
+            o = "PPCINST? 0x%x" % int(data, 2)
+            self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [0, [o]])
         return
 
 
