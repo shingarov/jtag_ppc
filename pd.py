@@ -68,8 +68,52 @@ class PPCMODE(JTAGInstruction):
         if len(data) != JTAGD_LENGTH:
             raise Exception('Wrong PPCMODE data length')
         self.o = int(data, 2)
-        print("PPCMODE IN: 0x%x OUT: 0x%x" % (self.i, self.o))
-        self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [1, ["PPCMODE: 0x%x / 0x%x" % (self.i, self.o)]])
+        # DBCR0 bit-fields
+        i = "%s ++ " % data[32]
+        if self.i == 0:
+            i = i + '0'
+        if self.i & 0x80000000:
+            i = i + 'EDM '
+        if self.i & 0x40000000:
+            i = i + 'IDM '
+        if (self.i & 0x30000000) == 0x20000000:
+            i = i + 'RST[chip] '
+        if (self.i & 0x30000000) == 0x10000000:
+            i = i + 'RST[core] '
+        if (self.i & 0x30000000) == 0x30000000:
+            i = i + 'RST[system] '
+        if self.i & 0x8000000:
+            i = i + 'ICMP '
+        if self.i & 0x4000000:
+            i = i + 'BRT '
+        if self.i & 0x2000000:
+            i = i + 'IRPT '
+        if self.i & 0x1000000:
+            i = i + 'TRAP '
+        if self.i & 0x800000:
+            i = i + 'IAC1 '
+        if self.i & 0x400000:
+            i = i + 'IAC2 '
+        if self.i & 0x200000:
+            i = i + 'IAC3 '
+        if self.i & 0x100000:
+            i = i + 'IAC4 '
+        if self.i & 0x80000:
+            i = i + 'DAC1R '
+        if self.i & 0x40000:
+            i = i + 'DAC1W '
+        if self.i & 0x20000:
+            i = i + 'DAC2R '
+        if self.i & 0x10000:
+            i = i + 'DAC2W '
+        if self.i & 0x8000:
+            i = i + 'RET '
+        if self.i & 0x7FFE:
+            i = i + 'Reserved '
+        if self.i & 0x1:
+            i = i + 'FT '
+        print("PPCMODE: %s -> 0x%x" % (i, self.o))
+        self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [1, ["PPCMODE: %s -> 0x%x" % (i, self.o)]])
 
 # from A2 Processor User's Manual, Table 14-1
 SPRs_A2 = {
