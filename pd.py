@@ -72,7 +72,7 @@ class PPCMODE(JTAGInstruction):
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [1, ["PPCMODE: 0x%x / 0x%x" % (self.i, self.o)]])
 
 # from A2 Processor User's Manual, Table 14-1
-SPRs = {
+SPRs_A2 = {
     # sheet 1
     31   :  'ACOP',
     913  :  'AESR',
@@ -137,6 +137,111 @@ SPRs = {
 
 }
 
+# from PPC440 Processor User's Manual, Table 9-1 (p.403 et seq in r1.09)
+SPRs_PPC440 = {
+    0x001 :  'XER',
+    0x008 :  'LR',
+    0x009 :  'CTR',
+    0x016 :  'DEC',
+    0x01A :  'SRR0',
+    0x01B :  'SRR1',
+    0x030 :  'PID',
+    0x036 :  'DECAR',
+    0x03A :  'CSRR0',
+    0x03B :  'CSRR1',
+    0x03D :  'DEAR',
+    0x03E :  'ESR',
+    0x03F :  'IVPR',
+    0x100 :  'USPRG0',
+# p.404
+    0x101 :  'USPRG1', # corrected: this seems to be an error in the 440 UM
+    0x102 :  'USPRG2',
+    0x103 :  'USPRG3',
+    0x104 :  'USPRG4',
+    0x105 :  'USPRG5',
+    0x106 :  'USPRG6',
+    0x107 :  'USPRG7',
+    0x10C :  'UTBL',
+    0x10D :  'UTBU',
+    0x110 :  'SPRG0',
+    0x111 :  'SPRG1',
+    0x112 :  'SPRG2',
+    0x113 :  'SPRG3',
+    0x114 :  'SPRG4',
+    0x115 :  'SPRG5',
+    0x116 :  'SPRG6',
+    0x117 :  'SPRG7',
+    0x11C :  'TBL',
+    0x11D :  'TBU',
+    0x11E :  'PIR',
+    0x11F :  'PVR',
+    0x130 :  'DBSR',
+    0x134 :  'DBCR0',
+    0x135 :  'DBCR1',
+    0x136 :  'DBCR2',
+    0x138 :  'IAC1',
+    0x139 :  'IAC2',
+    0x13A :  'IAC3',
+    0x13B :  'IAC4',
+    0x13C :  'DAC1',
+    0x13D :  'DAC2',
+    0x13E :  'DAC3',
+    0x13F :  'DAC4',
+    0x150 :  'TSR',
+    0x154 :  'TCR',
+    0x190 :  'IVOR',
+    0x191 :  'IVOR',
+    0x192 :  'IVOR',
+    0x193 :  'IVOR',
+    0x194 :  'IVOR',
+    0x195 :  'IVOR',
+# p.405
+    0x196 :  'IVOR6',
+    0x197 :  'IVOR7',
+    0x198 :  'IVO8R',
+    0x199 :  'IVOR9',
+    0x19A :  'IVOR10',
+    0x19B :  'IVOR11',
+    0x19C :  'IVOR12',
+    0x19D :  'IVOR13',
+    0x19E :  'IVOR14',
+    0x19F :  'IVOR15',
+    0x23A :  'MCSRR0',
+    0x23B :  'MCSRR1',
+    0x23C :  'MCSR',
+    0x370 :  'INV0',
+    0x371 :  'INV1',
+    0x372 :  'INV2',
+    0x373 :  'INV3',
+    0x374 :  'ITV0',
+    0x375 :  'ITV1',
+    0x376 :  'ITV2',
+    0x377 :  'ITV3',
+    0x378 :  'CCR1',
+    0x390 :  'DNV0',
+    0x391 :  'DNV1',
+    0x392 :  'DNV2',
+    0x393 :  'DNV3',
+    0x394 :  'DTV0',
+    0x395 :  'DTV1',
+    0x396 :  'DTV2',
+    0x397 :  'DTV3',
+    0x398 :  'DVLIM',
+    0x399 :  'IVLIM',
+    0x39B :  'RSTCFG',
+    0x39C :  'DCDBTL',
+    0x39D :  'DCDBTH',
+    0x39E :  'ICDBTRL',
+    0x39F :  'ICDBTRH',
+    0x3B2 :  'MMUCR',
+# p.406
+    0x3B3 :  'CCR0',
+    0x3D3 :  'ICDBDR',
+    0x3F3 :  'DBDR'
+}
+
+# This shold be handled automatically in the future
+SPRs = SPRs_PPC440
 
 class PPCINST(JTAGInstruction):
     def __init__(self, decoder):
