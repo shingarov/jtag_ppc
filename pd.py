@@ -307,6 +307,10 @@ class PPCINST(JTAGInstruction):
         if instr.mnemonic=='mtspr':
             if instr.op_find(1,0).reg in SPRs:
                 disassembled = disassembled + '  (' + SPRs[instr.op_find(1,0).reg] + ')'
+        if instr.mnemonic=='mfspr':
+            spr = instr.op_find(CS_OP_IMM, 1).reg
+            if spr in SPRs:
+                disassembled = disassembled + '  (' + SPRs[spr] + ')'
         print('PPCINST: %s' % disassembled)
         self.decoder.put(self.decoder.ss, self.decoder.es, self.decoder.out_ann, [0, [disassembled]])
 
